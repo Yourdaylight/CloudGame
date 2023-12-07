@@ -10,8 +10,6 @@ $baseColor: #d98410;
   height: 100%;
   background: url("https://g8r2p8u00eb9tghqgkbq1lfbogl7f84o4k8ltm2h5q4jnv8i7aufukm3.saxyit.com:20992/steam/clusters/sale_autumn2019_assets/54b5034d397baccb93181cc6/home_header_bg_day_english.gif?BSLuBan=eyJob3N0IjoibWVkaWEuc3QuZGwuZWNjZG54LmNvbSIsImRuc19ob3N0IjoienRnZGwudi50cnBjZG4ubmV0IiwidHMiOjE3MDEwOTUzMTgsImJzcmVxaWQiOiIwZTQxODZiMjAyOTUyMmQ3MzdhYWRkZTdjZmQzNDhjYiIsImNhY2hlX2tleSI6Ilwvc3RlYW1cL2NsdXN0ZXJzXC9zYWxlX2F1dHVtbjIwMTlfYXNzZXRzXC81NGI1MDM0ZDM5N2JhY2NiOTMxODFjYzZcL2hvbWVfaGVhZGVyX2JnX2RheV9lbmdsaXNoLmdpZiIsImhvc3QzMDIiOiJmb2czMDItc3QuYnM1OGkuYmFpc2hhbmNkbnguY29tIiwia2V5IjoiNDE1MjY1YWVjMzY2ZGE2NjYzYmEyY2IyMTNjNDk1NGUiLCJmb2czMDIiOiJvbiJ9") no-repeat fixed center;
   background-size: cover;
-  /* 可以设置不同的进入和离开动画 */
-  /* 设置持续时间和动画函数 */
   .login-form,
   .slide-fade-enter-active {
     transition: all 0.3s ease;
@@ -21,7 +19,7 @@ $baseColor: #d98410;
     transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
   }
   .slide-fade-enter, .slide-fade-leave-to
-  /* .slide-fade-leave-active for below version 2.1.8 */ {
+{
     transform: translateX(10px);
     opacity: 0;
   }
@@ -57,7 +55,6 @@ $baseColor: #d98410;
     left: calc(50% - 180px);
     z-index: 9;
     background-color: rgba(251, 252, 241, 0.8);
-    /* opacity: 0.9; */
     border-radius: 10px;
     padding: 10px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -85,7 +82,6 @@ $baseColor: #d98410;
   .ruleForm {
     position: absolute;
     width: calc(100% - 60px);
-    /* padding-top: 20px; */
   }
   .con-title {
     text-align: left;
@@ -93,7 +89,6 @@ $baseColor: #d98410;
   .img-logo {
     position: relative;
     z-index: 9999;
-    /* top: 100px; */
     left: calc(50% - 90px);
   }
 
