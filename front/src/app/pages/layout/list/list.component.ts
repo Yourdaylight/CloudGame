@@ -164,7 +164,7 @@ export class ListComponent implements OnInit {
       ...this.searchQueryForm.value,
     };
 
-    this.apiService.post('/game/getGames', params).subscribe(
+    this.apiService.post('/games', params).subscribe(
       (res: any) => {
         this.isLoading = false;
         const { code, data, total } = res;

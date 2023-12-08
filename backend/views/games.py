@@ -69,13 +69,6 @@ def add_game():
         for field in string_fields:
             if not isinstance(game_data.get(field), str):
                 return jsonify({"code": 500, "msg": f"Field:[{field}] should be a string"}), 400
-
-        # 验证列表类型的字段
-        # list_fields = ["Popular Tags", "Game Features", "Supported Languages"]
-        # for field in list_fields:
-        #     if not isinstance(game_data.get(field), list):
-        #         return jsonify({"code": 500, "msg": f"Field: [{field}] should be a list"}), 400
-
         # 添加时间戳
         game_data["date_added"] = datetime.datetime.now().strftime("%Y-%m-%d")
         game_data["update_time"] = time.time()

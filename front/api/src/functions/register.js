@@ -1,7 +1,8 @@
 const { app } = require('@azure/functions');
 
 const { MongoClient } = require('mongodb');
-
+// import jwt
+const jwt = require('jsonwebtoken');
 var connectionString = "mongodb://games:oQ5bO7YMfpu99oZMpKs0fjjypybyIMwBHJh7TmK8FYj1J41StnByDp1vxZ0huSXxlYbNLiRtNdvZACDb9cByMQ%3D%3D@games.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@games@";
 const client = new MongoClient(connectionString);
 
@@ -12,7 +13,7 @@ app.http('register', {
         try {
             await client.connect();
             const db = client.db("games");
-            const { username, password } = request.body;
+            const { username, password } = await request.json();
             const existingUser = await db.collection("user").findOne({ username });
 
             if (!existingUser) {
@@ -49,13 +50,13 @@ app.http('login', {
     authLevel: 'anonymous',
     handler: async (request, context) => {
         try {
-            const { username, password } = request.body;
+            const { username, password } = await request.json();
             await client.connect();
             const db = client.db("games");
             const user = await db.collection("user").findOne({ username, password });
 
             if (user) {
-                const token = jwt.sign({ username }, process.env["JWT_SECRET"], { expiresIn: '1h' });
+                const token = jwt.sign({ username }, "123456" ,{ expiresIn: '1h' });
                 context.res = {
                     status: 200, // HTTP 状态码
                     body: JSON.stringify({ code: 200, msg: "SUCCESS", data: { token } }),
@@ -82,4 +83,3 @@ app.http('login', {
         }
     }
 });
-
