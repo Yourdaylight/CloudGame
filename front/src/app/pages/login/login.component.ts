@@ -27,10 +27,13 @@ export class LoginComponent implements OnInit {
     if (this.validateForm.valid) {
       console.log('submit', this.validateForm.value);
       let loginModel = Object.assign(this.validateForm.value, {});
-      let url = type == 'login' ? '/games/login' : '/games/register';
+      let url = type == 'login' ? '/login' : '/register';
       console.log(url);
       this.apiService.post(url, loginModel).subscribe((res: any) => {
         const { code, msg, data } = res;
+        console.log(res); // 应该显示 JavaScript 对象
+        console.log(res.code); // 访问对象的属性
+        console.log(res.msg);
         if (code === 200) {
           if (type == 'login') {
             this.$message.success('Login Success!');
