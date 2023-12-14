@@ -41,20 +41,38 @@
   </div>
 </div>
   <!-- Drag and Drop Upload Section -->
-  <nz-upload
-  nzType="drag"
-  [nzMultiple]="true"
-  [nzBeforeUpload]="beforeUpload"
-  (nzChange)="handleChange($event)"
->
-  <p class="ant-upload-drag-icon">
-    <i nz-icon nzType="inbox"></i>
-  </p>
-  <p class="ant-upload-text">Click or drag file to this area to upload</p>
-  <p class="ant-upload-hint">
-    Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
-  </p>
-</nz-upload>
-<button (click)="handleUpload()" [disabled]="uploading">Upload</button>
+  <div class="upload-section">
+    <nz-upload
+      nzType="drag"
+      [nzMultiple]="true"
+      [nzBeforeUpload]="beforeUpload"
+      (nzChange)="handleChange($event)"
+      class="upload-box"
+    >
+      <p class="ant-upload-drag-icon">
+        <i nz-icon nzType="inbox"></i>
+      </p>
+      <p class="ant-upload-text">Click or drag your videos or photos to this area to upload</p>
+      <p class="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+      </p>
+    </nz-upload>
+    <button nz-button nzType="primary" (click)="handleUpload()" [disabled]="uploading">Upload</button>
+    <nz-spin [nzSpinning]="uploading"></nz-spin>
+    <ul>
+      <li *ngFor="let file of fileList">{{ file.name }}</li>
+    </ul>
+  </div>
+  
+  <h3 style="margin-top: 20px;">Wonderful moments</h3>
+  <nz-row nzGutter="16">
+    <nz-col nzSpan="8" *ngFor="let item of images">
+      <nz-card [nzHoverable]="true">
+        <img *ngIf="item.type.startsWith('image')" [src]="item.url" alt="Uploaded Image" />
+        <video *ngIf="item.type.startsWith('video')" [src]="item.url" controls></video>
+        <nz-card-meta [nzTitle]="'Upload by ' + username"></nz-card-meta>
+      </nz-card>
+    </nz-col>
+  </nz-row>
 
 

@@ -4,6 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { PageNotFoundComponent } from './pages/pageNotFound.component';
 
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
   {
@@ -21,6 +23,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

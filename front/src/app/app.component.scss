@@ -24,3 +24,8 @@ $baseColor: #d98410;
 ::ng-deep .ant-pagination-item:hover a {
   color: $baseColor;
 }
+
+::ng-deep .image-card img {
+  max-width: 100%;
+  height: auto;
+}
