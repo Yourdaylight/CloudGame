@@ -5,6 +5,10 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NavigateService } from 'src/app/services/navigate.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// 引入Azure存储相关的库
+import { BlobServiceClient, ContainerClient }from '@azure/storage-blob';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
+
 @Component({
   selector: 'app-game-details',
   templateUrl: './game-details.component.html',
@@ -12,41 +16,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class GameDetailsComponent implements OnInit {
   gameInfo: any = {};
-  commentList: any = [];
-  fps: any = '';
   editForm!: FormGroup;
-  editField: any = [
-    {
-      label: 'Title',
-      value: 'Title',
-    },
-    {
-      label: 'Original Price',
-      value: 'Original Price',
-    },
-    {
-      label: 'Discounted Price',
-      value: 'Discounted Price',
-    },
-    {
-      label: 'Developer',
-      value: 'Developer',
-    },
-    {
-      label: 'Publisher',
-      value: 'Publisher',
-    },
-    {
-      label: 'Release Date',
-      value: 'Release Date',
-    },
-    {
-      label: 'Game Description',
-      value: 'Game Description',
-    },
-  ];
   isVisible: boolean = false;
-  isAdmin: boolean = false; // Indicates if the user is an admin
+  isAdmin: boolean = false;
+  uploading = false;
+  fileList: NzUploadFile[] = [];
+
+  // Azure Storage SAS URL
+  sasUrl = 'https://medias.blob.core.windows.net/assets?si=asset&sv=2022-11-02&sr=c&sig=OA8DpIpkl1ak4ZG%2BA7BzMtIRbI6carOTxLtzAcHa9pg%3D';
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +35,7 @@ export class GameDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isAdmin = localStorage.getItem('username') == 'admin';
+    this.isAdmin = localStorage.getItem('username') === 'admin';
     this.gameInfo = JSON.parse(localStorage.getItem('gameInfo') as any);
     this.editForm = this.fb.group({
       Title: [null, [Validators.required]],
@@ -69,108 +46,46 @@ export class GameDetailsComponent implements OnInit {
       'Release Date': [null, [Validators.required]],
       'Game Description': [null, [Validators.required]],
     });
-    this.getCommentList();
   }
 
-  getCommentList(): void {
-    this.apiService
-      .post('/getReviews', {
-        gameId: this.gameInfo._id,
-      })
-      .subscribe(
-        (res: any) => {
-          const { code, data } = res;
-          if (code == 200) {
-            this.commentList = data;
-            this.submitting = false;
-          }
-        },
-        () => {}
-      );
+  // Handle the file before uploading
+  beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]) => {
+    this.fileList = this.fileList.concat(file);
+    return false; // Prevent automatic upload
+  };
+
+  // Perform the upload
+  handleUpload(): void {
+    this.uploadFilesToAzure(this.fileList);
   }
 
-  submitting = false;
-  commentValue = '';
-
-  handleSubmit(): void {
-    this.submitting = true;
-
-    let params = {
-      username: localStorage.getItem('username'),
-      review: this.commentValue,
-      _id: this.gameInfo._id,
-    };
-    this.apiService.post('/addReview', params).subscribe(
-      (res: any) => {
-        this.commentValue = '';
-        this.getCommentList();
-      },
-      () => {}
-    );
+   // Handle file change event for drag-and-drop
+   handleChange({ file, fileList }: NzUploadChangeParam): void {
+    const status = file.status;
+    if (status !== 'uploading') {
+      console.log(file, fileList);
+    }
+    if (status === 'done') {
+      this.$message.success(`${file.name} file uploaded successfully.`);
+    } else if (status === 'error') {
+      this.$message.error(`${file.name} file upload failed.`);
+    }
   }
 
-  removeComment(comment: any): void {
-    this.submitting = true;
-    let params = {
-      review_id: comment.review_id,
-      gameId: this.gameInfo._id,
-    };
-    this.apiService.post('/deleteReview', params).subscribe(
-      (res: any) => {
-        this.commentValue = '';
-        this.getCommentList();
-      },
-      () => {}
-    );
-  }
+  // Upload files to Azure Blob Storage
+  async uploadFilesToAzure(files: NzUploadFile[]) {
+    const blobServiceClient = new BlobServiceClient(this.sasUrl);
+    const containerName = 'assets'; // Container name
+    const containerClient = blobServiceClient.getContainerClient(containerName);
 
-  onCollect() {
-    let params = {
-      username: localStorage.getItem('username'),
-      gameId: this.gameInfo._id,
-    };
-    this.apiService.post('/games/collectGame', params).subscribe(
-      (res: any) => {
-        this.$message.success('collected!');
-        this.router.navigate(['/layout/favorite'], {});
-      },
-      () => {}
-    );
-  }
-
-  onDelete() {
-    this.apiService
-      .post('/game/deleteGame', { _id: this.gameInfo._id })
-      .subscribe(
-        (res: any) => {
-          this.$message.success(`delete ${this.gameInfo.title} success!`);
-          this.router.navigate(['/layout/list'], {});
-        },
-        () => {}
-      );
-  }
-  onEdit() {
-    this.isVisible = true;
-    this.editForm.patchValue(this.gameInfo);
-  }
-  submitForm(): void {
-    if (this.editForm.valid) {
-      let params = { ...this.editForm.value, _id: this.gameInfo._id };
-      this.apiService.post('/game/updateGame', params).subscribe(
-        (res: any) => {
-          this.isVisible = false;
-          this.$message.success(`edit success!`);
-          this.router.navigate(['/layout/list'], {});
-        },
-        () => {}
-      );
-    } else {
-      Object.values(this.editForm.controls).forEach((control: any) => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
+    try {
+      for (const file of files) {
+        const blockBlobClient = containerClient.getBlockBlobClient(file.name!);
+        await blockBlobClient.uploadData(file.originFileObj as Blob);
+        this.$message.success(`${file.name} uploaded successfully.`);
+      }
+    } catch (error) {
+      this.$message.error(`Upload failed: ${error}`);
     }
   }
 }
