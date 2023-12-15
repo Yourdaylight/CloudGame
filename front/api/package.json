@@ -11,8 +11,5 @@
     "mongodb": "^6.3.0"
   },
   "devDependencies": {},
-  "main": "src/functions/*.js",
-  "engines": {
-    "node": "16.18.0"
-  }
+  "main": "src/functions/*.js"
 }
