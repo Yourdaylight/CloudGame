@@ -38,22 +38,24 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-    <div nz-col nzSpan="8" style="margin-top: 20px">
+    <div nz-col nzSpan="12" style="margin-top: 20px">
       <button nz-button nzType="primary">Search</button>
-      <!-- Button to open the modal for adding a new game -->
       <button
-        *ngIf="isAdmin"
         nz-button
         nzType="default"
         (click)="isModalVisible = true"
-        style="margin-left: 15px"
+        style="margin-left: 10px"
       >
-        <i nz-icon nzType="plus" nzTheme="outline"></i>Add Game
+        <i nz-icon nzType="upload" nzTheme="outline"></i>Upload Your Game Moment
       </button>
     </div>
   </div>
 </form>
-
+<nz-modal [(nzVisible)]="isModalVisible" nzTitle="Upload your Game Moment" (nzOnCancel)="isModalVisible = false">
+  <ng-container *nzModalContent>
+    <p>{{modalContent}}</p>
+  </ng-container>
+</nz-modal>
 <!-- Display of items with a loading spinner -->
 <div style="padding: 5px 30px">
   <nz-spin [nzSpinning]="isLoading">
@@ -128,37 +130,3 @@
     style="text-align: right"
   ></nz-pagination>
 </div>
-<nz-modal
-  [(nzVisible)]="isModalVisible"
-  nzTitle="Add Movie"
-  nzOkText="Ok"
-  nzCancelText="Cancel"
-  (nzOnOk)="submitForm()"
-  (nzOnCancel)="isModalVisible = false"
->
-  <ng-container *nzModalContent>
-    <form nz-form [formGroup]="createForm">
-      <div nz-row [nzGutter]="24">
-        <div nz-col [nzSpan]="24" *ngFor="let field of createFormFields">
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
-              >{{ field.label }}
-            </nz-form-label>
-            <nz-form-control
-              [nzSm]="14"
-              [nzXs]="24"
-              [nzErrorTip]="'Please input ' + field.label!"
-            >
-              <input
-                nz-input
-                [formControlName]="field.value"
-                id="name"
-                [placeholder]="field.label"
-              />
-            </nz-form-control>
-          </nz-form-item>
-        </div>
-      </div>
-    </form>
-  </ng-container>
-</nz-modal>

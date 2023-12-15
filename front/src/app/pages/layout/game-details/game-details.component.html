@@ -59,20 +59,26 @@
     </nz-upload>
     <button nz-button nzType="primary" (click)="handleUpload()" [disabled]="uploading">Upload</button>
     <nz-spin [nzSpinning]="uploading"></nz-spin>
+    <!-- if there are files in the fileList and not uploading, show the input and button -->
+    <div *ngIf="fileList.length > 0 && !uploading">
+      <input nz-input [(ngModel)]="uploadTitle" placeholder="Please Enter a Title">
+      <button nz-button nzType="primary" (click)="handleUpload()">Confirm</button>
+    </div>
+
     <ul>
       <li *ngFor="let file of fileList">{{ file.name }}</li>
     </ul>
   </div>
   
-  <h3 style="margin-top: 20px;">Wonderful moments</h3>
+  <h2 style="margin-top: 15px;">Wonderful moments({{images.length}})</h2>
   <nz-row nzGutter="16">
     <nz-col nzSpan="8" *ngFor="let item of images">
       <nz-card [nzHoverable]="true">
-        <img *ngIf="item.type.startsWith('image')" [src]="item.url" alt="Uploaded Image" />
-        <video *ngIf="item.type.startsWith('video')" [src]="item.url" controls></video>
-        <nz-card-meta [nzTitle]="'Upload by ' + username"></nz-card-meta>
+        <nz-card-meta [title]="item.picTitle"></nz-card-meta>
+        <img *ngIf="item.type.startsWith('image')" [src]="item.url" alt="Uploaded Image" class="media" />
+        <video *ngIf="item.type.startsWith('video')" [src]="item.url" controls class="media"></video>
+        <audio *ngIf="item.type.startsWith('audio')" [src]="item.url" controls class="media"></audio>
+        <nz-card-meta [nzTitle]="'Upload by ' + username" [nzDescription]="item.lastModified | date:'medium'"></nz-card-meta>
       </nz-card>
     </nz-col>
   </nz-row>
-
-

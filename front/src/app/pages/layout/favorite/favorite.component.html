@@ -1,11 +1,15 @@
+
+<h2>Upload Count({{images.length}})</h2>
 <nz-list [nzDataSource]="images" nzBordered>
   <nz-list-item *ngFor="let image of images; let i = index">
     <nz-list-item-meta
       [nzAvatar]="image.url"
       [nzTitle]="'Upload by ' + username"
       [nzDescription]="image.uploadTime">
+      <p>{{ image.picTitle }}</p>
+      <a [href]="image.url" target="_blank">{{ image.url }}</a>
     </nz-list-item-meta>
-    <button nz-button nzType="primary" [ngStyle]="{ marginRight: '10px' }" (click)="previewImage(image.blobUrl)">Preview</button>
+    <button nz-button nzType="primary" [ngStyle]="{ marginRight: '10px' }" (click)="previewImage(image)">Preview</button>
     <button nz-button nzType="primary" [ngStyle]="{ marginRight: '10px' }" (click)="downloadImage(image.url)">Download</button>
     <button nz-button nzType="primary" nzDanger (click)="deleteImage(i)">Delete</button>
   </nz-list-item>

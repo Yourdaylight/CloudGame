@@ -76,6 +76,10 @@ export class ListComponent implements OnInit {
     },
   ];
   isAdmin: boolean = false; // Indicates if the user is an admin
+  // ...
+
+  modalContent = 'Welcome to upload your game moment. If you need to upload, please select the game on the homepage first. Each game detail page has wonderful moments uploaded by other players. Welcome to upload your wonderful video.';
+
 
   // Constructor with necessary service injections
   constructor(
@@ -118,30 +122,6 @@ export class ListComponent implements OnInit {
     });
   }
 
-  // Submit the create form
-  submitForm(): void {
-    if (this.createForm.valid) {
-      let params = { ...this.createForm.value };
-      this.apiService.post('/game/addGame', params).subscribe(
-        (res: any) => {
-          this.isModalVisible = false;
-          this.getGameList();
-          this.messageService.success(`add success!`);
-        },
-        () => {
-          // Error handling
-        }
-      );
-    } else {
-      // Handling form validation
-      Object.values(this.createForm.controls).forEach((control) => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
-    }
-  }
 
   // Trigger search
   onSearch() {
