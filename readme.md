@@ -12,3 +12,7 @@
 - Static Web Apps 静态网站部署文件：dist/ng_front
 - Azure functions ：front/api
 - CosmosDB数据库的连接字符串：`mongodb://games:oQ5bO7YMfpu99oZMpKs0fjjypybyIMwBHJh7TmK8FYj1J41StnByDp1vxZ0huSXxlYbNLiRtNdvZACDb9cByMQ%3D%3D@games.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@games@`
+
+## 相关文档说明
+- Azure Function: https://learn.microsoft.com/en-us/azure/static-web-apps/add-api?tabs=angular
+- Azure Static Web Apps: https://docs.microsoft.com/en-us/azure/static-web-apps/overview?tabs=angular
