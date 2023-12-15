@@ -127,14 +127,27 @@ export class GameDetailsComponent implements OnInit {
       this.images = [];
       for (let i = 0; i < blobs.length; i++) {
         const blob = blobs[i];
-        console.log("###########")
         const name = blob.getElementsByTagName('Name')[0].textContent || '';
         const title = JSON.parse(localStorage.getItem('gameInfo') as any).Title;
-        console.log(name);
-        console.log(title);
         if (!name || name.includes(title)) {
           const blobUrl = `${containerUrl}/${name}${this.extractSasToken()}`;
-          // Assuming you want to display images
+          const extension = name.split('.').pop();
+          let type = '';
+          switch (extension) {
+            case 'jpg':
+            case 'jpeg':
+              type = 'image/jpeg';
+              break;
+            case 'png':
+              type = 'image/png';
+              break;
+            case 'gif':
+              type = 'image/gif';
+              break;
+            // Add more cases as needed
+            default:
+              type = 'application/octet-stream'; // Default to binary data
+          }
           this.images.push({ url: blobUrl, type: 'image/jpeg' }); // Modify 'type' as needed
         }
       }
